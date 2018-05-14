@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
     spreadsheet=new spreadSheet(this);
     aboutdialog=new aboutDialog(this);
-    p_finddialog=new findDialog(this);
+    //p_finddialog=new findDialog(this);
 	createActions();
     createMenus();//类似这样的私有函数一般只在窗口初始化的时候使用，并且不用于继承，所以就定义为私有的成员函数
 }
@@ -79,13 +79,13 @@ void MainWindow::createActions()
     copyAction->setIcon(QIcon(":/images/copy.png"));
     copyAction->setShortcut(QKeySequence::Copy);
     copyAction->setStatusTip(tr("Copy cells"));
-	connect(copyAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_copy));
+    connect(copyAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_copy()));
 
 	pasteAction=new QAction(tr("&Paste"),this);
     pasteAction->setIcon(QIcon(":/images/paste.png"));
     pasteAction->setShortcut(QKeySequence::Paste);
     pasteAction->setStatusTip(tr("Paste cells"));
-	connect(pasteAction,SIGNAL(triggered),spreadsheet,SLOT(slot_paste()));
+    connect(pasteAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_paste()));
 
 	deleteAction=new QAction(tr("&Delete"),this);
     deleteAction->setIcon(QIcon(":/images/delete.png"));
@@ -116,11 +116,11 @@ void MainWindow::createActions()
 	recalculateAction=new QAction(tr("&Recalculate"),this);
     recalculateAction->setShortcut(tr("F9"));
     recalculateAction->setStatusTip(tr("Recalculate"));
-	connect(recalculateAction,SIGNAL(triggered),spreadsheet,SLOT(slot_recalculate));
+    connect(recalculateAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_recalculate()));
 
 	sortAction=new QAction(tr("&Sort..."),this);
     sortAction->setStatusTip(tr("Sort"));
-	connect(sortAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_sort));
+    connect(sortAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_sort()));
 
 	//options
 	showGridAction=new QAction(tr("Show Grid"),this);

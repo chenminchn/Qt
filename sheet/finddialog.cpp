@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include "mainwindow.h"
 #include <QIcon>
+#include "finddialog.h"
 
 
 findDialog::findDialog(QWidget *parent):QDialog(parent),currentText("")
