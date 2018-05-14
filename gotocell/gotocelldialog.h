@@ -11,6 +11,8 @@ class goToCellDialog : public QDialog, public Ui::goToCellDialog
     Q_OBJECT
 public:
     goToCellDialog(QWidget *parent=0);
+private slots:
+    void on_textChanged(const QString& str);
 };
 
 #endif // GOTOCELLDIALOG_H
