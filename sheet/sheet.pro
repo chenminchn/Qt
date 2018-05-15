@@ -4,6 +4,7 @@
 QT += core
 QT +=gui
 QT += widgets
+
 TEMPLATE = app
 TARGET = sheet
 INCLUDEPATH += .
@@ -15,3 +16,16 @@ SOURCES += aboutdialog.cpp \
            main.cpp \
            mainwindow.cpp \
            spreadsheet.cpp
+
+DISTFILES += \
+    images/copy.png \
+    images/cut.png \
+    images/find.png \
+    images/gotocell.png \
+    images/new.png \
+    images/open.png \
+    images/paste.png \
+    images/save.png
+
+RESOURCES += \
+    resource.qrc

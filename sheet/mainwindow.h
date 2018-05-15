@@ -8,6 +8,8 @@ class spreadSheet;
 class aboutDialog;
 class QMenu;
 class findDialog;
+class QMenuBar;
+class QToolBar;
 
 class MainWindow : public QMainWindow
 {
@@ -31,6 +33,7 @@ private slots:
     //edit
     void slot_findNext(const QString& text,Qt::CaseSensitivity cs);
     void slot_findPrevious(const QString& text,Qt::CaseSensitivity cs);
+    void slot_goToCellDialog();
 
 	//edit
 	void selectAll();
@@ -43,6 +46,8 @@ private slots:
 private:
 	void createActions();
 	void createMenus();
+    void createContextMenu();
+    void createToolBars();
 
 	//file
 	QAction *newAction;
@@ -85,6 +90,8 @@ private:
 	QMenu *optionsMenu;
 	QMenu *helpMenu;
 
+    QToolBar *fileToolBar;
+    QToolBar *editToolBar;
 
 	spreadSheet *spreadsheet;
 	aboutDialog *aboutdialog;

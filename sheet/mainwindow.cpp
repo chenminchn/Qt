@@ -8,24 +8,16 @@
 #include <QMenu>
 #include "finddialog.h"
 #include <QMenuBar>
+#include <QToolBar>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
     spreadsheet=new spreadSheet(this);
     aboutdialog=new aboutDialog(this);
-    //p_finddialog=new findDialog(this);
+    p_finddialog=new findDialog(this);
 	createActions();
-    createMenus();//类似这样的私有函数一般只在窗口初始化的时候使用，并且不用于继承，所以就定义为私有的成员函数
-}
-
-MainWindow::~MainWindow()
-{
-
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-
+    createMenus();
+    createContextMenu();
 }
 
 void MainWindow::createActions()
@@ -112,6 +104,12 @@ void MainWindow::createActions()
 	findAction->setStatusTip(tr("Find"));
 	connect(findAction,SIGNAL(triggered()),this,SLOT(slot_findDialog()));
 
+    gotocellAction=new QAction(tr("&Go to Cell..."),this);
+    gotocellAction->setIcon(QIcon(":/images/gotocell.png"));
+    gotocellAction->setShortcut(tr("Ctrl+G"));
+    gotocellAction->setStatusTip(tr("Go to cell"));
+    connect(gotocellAction,SIGNAL(triggered()),SLOT(slot_goToCellDialog()));
+
 	//Tools
 	recalculateAction=new QAction(tr("&Recalculate"),this);
     recalculateAction->setShortcut(tr("F9"));
@@ -124,18 +122,18 @@ void MainWindow::createActions()
 
 	//options
 	showGridAction=new QAction(tr("Show Grid"),this);
-	showGridAction->setCheckable(true);
-	showGridAction->setChecked(spreadsheet->showGrid());
+    showGridAction->setCheckable(true);
+    showGridAction->setChecked(spreadsheet->showGrid());
 	showGridAction->setStatusTip(tr("Show or hide the spreadsheet's grid."));
 	connect(showGridAction,SIGNAL(toggled(bool)),spreadsheet,SLOT(setShowGrid(bool)));
 
 	autoRecalculateAction=new QAction(tr("&Auto Recalculate"),this);
 	autoRecalculateAction->setCheckable(true);
-	autoRecalculateAction->setChecked(spreadsheet->autoRecalculate());
+    autoRecalculateAction->setChecked(spreadsheet->autoRecalculate());
 	autoRecalculateAction->setStatusTip(tr("Auto recalculate"));
 	connect(autoRecalculateAction,SIGNAL(toggled(bool)),spreadsheet,SLOT(slot_setAutoRecalculate(bool)));
 
-	//about
+    //Help
 	aboutAction=new QAction(tr("&About"),this);
 	aboutAction->setStatusTip(tr("About this application."));
 	connect(aboutAction,SIGNAL(triggered()),this,SLOT(aboutSlot()));
@@ -143,6 +141,87 @@ void MainWindow::createActions()
 	aboutQtAction=new QAction(tr("About &Qt"),this);
 	aboutAction->setStatusTip(tr("Show the Qt library's About box."));
 	connect(aboutAction,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
+}
+
+MainWindow::~MainWindow()
+{
+
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+
+}
+
+void MainWindow::createMenus()
+{
+
+    //file menu
+    fileMenu=menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(newAction);
+    fileMenu->addAction(openAction);
+    fileMenu->addAction(saveAction);
+    fileMenu->addAction(saveAsAction);
+    separatorAction=fileMenu->addSeparator();//为什么这里要保存变量？
+    for(int i=0;i<MaxRecentFiles;i++)
+    {
+        fileMenu->addAction(recentFileAction[i]);
+    }
+    fileMenu->addSeparator();
+    fileMenu->addAction(exitAction);
+
+    //Edit menu
+    editMenu=menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(cutAction);
+    editMenu->addAction(copyAction);
+    editMenu->addAction(pasteAction);
+    editMenu->addAction(deleteAction);
+    selectMenu=editMenu->addMenu(tr("&Select"));
+    selectMenu->addAction(selectRowAction);
+    selectMenu->addAction(selectColumnAction);
+    selectMenu->addAction(selectAllAction);
+    editMenu->addSeparator();
+    editMenu->addAction(findAction);
+    editMenu->addAction(gotocellAction);
+
+    //Tools menu
+    toolsMenu=menuBar()->addMenu(tr("&Tools"));
+    toolsMenu->addAction(recalculateAction);
+    toolsMenu->addAction(sortAction);
+
+    //Options menu
+    optionsMenu=menuBar()->addMenu(tr("&Options"));
+    optionsMenu->addAction(showGridAction);
+    optionsMenu->addAction(autoRecalculateAction);
+
+    //Help menu
+    helpMenu=menuBar()->addMenu(tr("&Help"));
+    helpMenu->addAction(aboutAction);
+    helpMenu->addAction(aboutQtAction);
+}
+
+void MainWindow::createContextMenu()
+{
+    spreadsheet->addAction(cutAction);
+    spreadsheet->addAction(copyAction);
+    spreadsheet->addAction(pasteAction);
+    spreadsheet->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+
+void MainWindow::createToolBars()
+{
+    fileToolBar=addToolBar(tr("&File"));
+    fileToolBar->addAction(newAction);
+    fileToolBar->addAction(openAction);
+    fileToolBar->addAction(saveAction);
+
+    editToolBar=addToolBar(tr("&Edit"));
+    editToolBar->addAction(cutAction);
+    editToolBar->addAction(copyAction);
+    editToolBar->addAction(pasteAction);
+    editToolBar->addSeparator();
+    editToolBar->addAction(findAction);
+    editToolBar->addAction(gotocellAction);
 }
 
 void MainWindow::newFile()
@@ -185,42 +264,14 @@ void MainWindow::slot_findPrevious(const QString &text, Qt::CaseSensitivity cs)
 
 }
 
+void MainWindow::slot_goToCellDialog()
+{
+
+}
+
 void MainWindow::aboutSlot()
 {
 	aboutdialog->show();
-}
-
-void MainWindow::createMenus()
-{
-	//file
-	fileMenu=menuBar()->addMenu(tr("&File"));
-	fileMenu->addAction(newAction);
-	fileMenu->addAction(openAction);
-	fileMenu->addAction(saveAction);
-    fileMenu->addAction(saveAsAction);
-	separatorAction=fileMenu->addSeparator();//为什么这里要保存变量？
-	for(int i=0;i<MaxRecentFiles;i++)
-	{
-		fileMenu->addAction(recentFileAction[i]);
-	}
-	fileMenu->addSeparator();
-	fileMenu->addAction(exitAction);
-
-	//Edit
-	editMenu=menuBar()->addMenu(tr("&Edit"));
-	editMenu->addAction(cutAction);
-	editMenu->addAction(copyAction);
-	editMenu->addAction(pasteAction);
-	editMenu->addAction(deleteAction);
-	selectMenu=editMenu->addMenu(tr("&Select"));
-	selectMenu->addAction(selectRowAction);
-	selectMenu->addAction(selectColumnAction);
-	selectMenu->addAction(selectAllAction);
-	editMenu->addSeparator();
-	editMenu->addAction(findAction);
-
-	//Tools
-
 }
 
 void MainWindow::slot_findDialog()
