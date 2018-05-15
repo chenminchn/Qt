@@ -48,8 +48,11 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = main.cpp 
-OBJECTS       = main.o
+SOURCES       = gotocelldialog.cpp \
+		main.cpp moc_gotocelldialog.cpp
+OBJECTS       = gotocelldialog.o \
+		main.o \
+		moc_gotocelldialog.o
 DIST          = /opt/Qt5.7.1/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt5.7.1/5.7/gcc_64/mkspecs/common/unix.conf \
 		/opt/Qt5.7.1/5.7/gcc_64/mkspecs/common/linux.conf \
@@ -203,7 +206,9 @@ DIST          = /opt/Qt5.7.1/5.7/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt5.7.1/5.7/gcc_64/mkspecs/features/exceptions.prf \
 		/opt/Qt5.7.1/5.7/gcc_64/mkspecs/features/yacc.prf \
 		/opt/Qt5.7.1/5.7/gcc_64/mkspecs/features/lex.prf \
-		gotocell.pro  main.cpp
+		gotocell.pro gotocelldialog.h \
+		ui_gotocelldialog.h gotocelldialog.cpp \
+		main.cpp
 QMAKE_TARGET  = gotocell
 DESTDIR       = 
 TARGET        = gotocell
@@ -544,7 +549,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents gotocelldialog.h ui_gotocelldialog.h $(DISTDIR)/
+	$(COPY_FILE) --parents gotocelldialog.cpp main.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents gotocelldialog.ui $(DISTDIR)/
 
 
@@ -571,8 +577,163 @@ benchmark: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all:
+compiler_moc_header_make_all: moc_gotocelldialog.cpp
 compiler_moc_header_clean:
+	-$(DEL_FILE) moc_gotocelldialog.cpp
+moc_gotocelldialog.cpp: /opt/Qt5.7.1/5.7/gcc_64/include/QtCore/QObject \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qobject.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qobjectdefs.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qglobal.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qconfig.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qfeatures.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsystemdetection.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qprocessordetection.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcompilerdetection.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qtypeinfo.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qtypetraits.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qisenum.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsysinfo.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qlogging.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qflags.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qatomic.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qbasicatomic.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qgenericatomic.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qatomic_msvc.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qmutex.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qnumeric.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qversiontagging.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qstring.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qchar.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qbytearray.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qrefcount.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qarraydata.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qstringbuilder.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qlist.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qalgorithms.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qiterator.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qhashfunctions.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qpair.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qbytearraylist.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qstringlist.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qregexp.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qstringmatcher.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcoreevent.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qscopedpointer.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qmetatype.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qvarlengtharray.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcontainerfwd.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qobject_impl.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QDialog \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qdialog.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qwidget.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qwindowdefs.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qmargins.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpaintdevice.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qrect.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsize.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qpoint.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpalette.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qcolor.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qrgb.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qrgba64.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qbrush.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qvector.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qmatrix.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpolygon.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qregion.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qdatastream.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qline.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtransform.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpainterpath.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qimage.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpixelformat.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpixmap.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qfont.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qfontmetrics.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qfontinfo.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qcursor.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qkeysequence.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qevent.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qurl.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qurlquery.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qfile.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qfiledevice.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qvector2d.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtouchdevice.h \
+		ui_gotocelldialog.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/QVariant \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QAction \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qaction.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qicon.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qactiongroup.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QApplication \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcoreapplication.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qeventloop.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qguiapplication.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qinputmethod.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QButtonGroup \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qbuttongroup.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QHBoxLayout \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qboxlayout.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qlayout.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qlayoutitem.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qgridlayout.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QHeaderView \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qheaderview.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractitemview.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qframe.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qitemselectionmodel.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qstyleoption.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qvalidator.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qregularexpression.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qslider.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractslider.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qstyle.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qtabbar.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qtabwidget.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qrubberband.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QLabel \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qlabel.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QLineEdit \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qlineedit.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtextcursor.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtextformat.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpen.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtextoption.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QPushButton \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qpushbutton.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QSpacerItem \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QVBoxLayout \
+		gotocelldialog.h \
+		/opt/Qt5.7.1/5.7/gcc_64/bin/moc
+	/opt/Qt5.7.1/5.7/gcc_64/bin/moc $(DEFINES) -I/opt/Qt5.7.1/5.7/gcc_64/mkspecs/linux-g++ -I/home/cm/Qt/gotocell -I/home/cm/Qt/gotocell -I/opt/Qt5.7.1/5.7/gcc_64/include -I/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets -I/opt/Qt5.7.1/5.7/gcc_64/include/QtGui -I/opt/Qt5.7.1/5.7/gcc_64/include/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include gotocelldialog.h -o moc_gotocelldialog.cpp
+
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_uic_make_all: ui_gotocelldialog.h
@@ -588,9 +749,165 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_uic_clean 
+compiler_clean: compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
+
+gotocelldialog.o: gotocelldialog.cpp gotocelldialog.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/QObject \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qobject.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qobjectdefs.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qglobal.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qconfig.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qfeatures.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsystemdetection.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qprocessordetection.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcompilerdetection.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qtypeinfo.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qtypetraits.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qisenum.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsysinfo.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qlogging.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qflags.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qatomic.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qbasicatomic.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qgenericatomic.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qatomic_msvc.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qmutex.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qnumeric.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qversiontagging.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qstring.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qchar.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qbytearray.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qrefcount.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qarraydata.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qstringbuilder.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qlist.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qalgorithms.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qiterator.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qhashfunctions.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qpair.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qbytearraylist.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qstringlist.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qregexp.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qstringmatcher.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcoreevent.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qscopedpointer.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qmetatype.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qvarlengtharray.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcontainerfwd.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qobject_impl.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QDialog \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qdialog.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qwidget.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qwindowdefs.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qmargins.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpaintdevice.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qrect.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsize.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qpoint.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpalette.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qcolor.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qrgb.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qrgba64.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qbrush.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qvector.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qmatrix.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpolygon.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qregion.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qdatastream.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qline.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtransform.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpainterpath.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qimage.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpixelformat.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpixmap.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qfont.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qfontmetrics.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qfontinfo.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qcursor.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qkeysequence.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qevent.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qset.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qurl.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qurlquery.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qfile.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qfiledevice.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qvector2d.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtouchdevice.h \
+		ui_gotocelldialog.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/QVariant \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QAction \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qaction.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qicon.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qactiongroup.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QApplication \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qcoreapplication.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qeventloop.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qguiapplication.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qinputmethod.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QButtonGroup \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qbuttongroup.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QHBoxLayout \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qboxlayout.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qlayout.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qlayoutitem.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qgridlayout.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QHeaderView \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qheaderview.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractitemview.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qframe.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qitemselectionmodel.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qstyleoption.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qvalidator.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/qregularexpression.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qslider.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractslider.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qstyle.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qtabbar.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qtabwidget.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qrubberband.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QLabel \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qlabel.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QLineEdit \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qlineedit.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtextcursor.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtextformat.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qpen.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qtextoption.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QPushButton \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qpushbutton.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QSpacerItem \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QVBoxLayout \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/QRegExpValidator \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/QRegExp \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/QString
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o gotocelldialog.o gotocelldialog.cpp
 
 main.o: main.cpp /opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QApplication \
 		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qapplication.h \
@@ -697,6 +1014,8 @@ main.o: main.cpp /opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QApplication \
 		/opt/Qt5.7.1/5.7/gcc_64/include/QtGui/qinputmethod.h \
 		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QDialog \
 		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/qdialog.h \
+		gotocelldialog.h \
+		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/QObject \
 		ui_gotocelldialog.h \
 		/opt/Qt5.7.1/5.7/gcc_64/include/QtCore/QVariant \
 		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QAction \
@@ -742,6 +1061,9 @@ main.o: main.cpp /opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QApplication \
 		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QSpacerItem \
 		/opt/Qt5.7.1/5.7/gcc_64/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+moc_gotocelldialog.o: moc_gotocelldialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_gotocelldialog.o moc_gotocelldialog.cpp
 
 ####### Install
 

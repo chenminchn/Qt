@@ -14,11 +14,11 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QVBoxLayout>
 
@@ -33,8 +33,7 @@ public:
     QLineEdit *lineEdit;
     QHBoxLayout *horizontalLayout_2;
     QSpacerItem *horizontalSpacer;
-    QPushButton *okButton;
-    QPushButton *cancelButton;
+    QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *goToCellDialog)
     {
@@ -63,20 +62,15 @@ public:
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer = new QSpacerItem(68, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_2->addItem(horizontalSpacer);
 
-        okButton = new QPushButton(goToCellDialog);
-        okButton->setObjectName(QStringLiteral("okButton"));
-        okButton->setEnabled(false);
+        buttonBox = new QDialogButtonBox(goToCellDialog);
+        buttonBox->setObjectName(QStringLiteral("buttonBox"));
+        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
 
-        horizontalLayout_2->addWidget(okButton);
-
-        cancelButton = new QPushButton(goToCellDialog);
-        cancelButton->setObjectName(QStringLiteral("cancelButton"));
-
-        horizontalLayout_2->addWidget(cancelButton);
+        horizontalLayout_2->addWidget(buttonBox);
 
 
         verticalLayout->addLayout(horizontalLayout_2);
@@ -84,13 +78,8 @@ public:
 #ifndef QT_NO_SHORTCUT
         label->setBuddy(lineEdit);
 #endif // QT_NO_SHORTCUT
-        QWidget::setTabOrder(lineEdit, okButton);
-        QWidget::setTabOrder(okButton, cancelButton);
 
         retranslateUi(goToCellDialog);
-
-        okButton->setDefault(true);
-
 
         QMetaObject::connectSlotsByName(goToCellDialog);
     } // setupUi
@@ -99,8 +88,6 @@ public:
     {
         goToCellDialog->setWindowTitle(QApplication::translate("goToCellDialog", "Go To Cell", Q_NULLPTR));
         label->setText(QApplication::translate("goToCellDialog", "&Cell Location:", Q_NULLPTR));
-        okButton->setText(QApplication::translate("goToCellDialog", "OK", Q_NULLPTR));
-        cancelButton->setText(QApplication::translate("goToCellDialog", "Cancel", Q_NULLPTR));
     } // retranslateUi
 
 };

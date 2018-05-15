@@ -12,7 +12,7 @@ class goToCellDialog : public QDialog, public Ui::goToCellDialog
 public:
     goToCellDialog(QWidget *parent=0);
 private slots:
-    void on_textChanged(const QString& str);
+    void on_lineEdit_textChanged(const QString& str);
 };
 
 #endif // GOTOCELLDIALOG_H
