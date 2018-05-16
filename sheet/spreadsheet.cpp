@@ -1,12 +1,34 @@
 #include "spreadsheet.h"
+#include <QStringList>
+#include <QChar>
+
 
 spreadSheet::spreadSheet(QWidget *parent):QTableWidget(parent)
 {
-
+    setColumnCount(26);
+    setRowCount(1000);
+    QStringList header;
+    QChar ch='A';
+    QChar last='Z';
+    while(ch.unicode()<last.unicode()+1)
+        {
+        header<<ch;
+        ch=ch.unicode()+1;
+    }
+    setHorizontalHeaderLabels(header);
 }
 spreadSheet::~spreadSheet()
 {
 
+}
+QString& spreadSheet::currentLocation()
+{
+    return m_currentLocation;
+}
+
+QString& spreadSheet::currentFormula()
+{
+    return m_currentFormula;
 }
 bool spreadSheet::showGrid()
 {

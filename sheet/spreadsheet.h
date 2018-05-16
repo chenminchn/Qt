@@ -7,6 +7,8 @@ public:
     ~spreadSheet();
 	bool showGrid();
 	bool autoRecalculate();
+    QString& currentLocation();
+    QString& currentFormula();
 
 public slots:
 	void slot_setShowGrid(bool flag);
@@ -22,4 +24,6 @@ public slots:
 private:
 	bool m_showgrid;
 	bool m_autoRecalculate;
+    QString m_currentLocation;
+    QString m_currentFormula;
 };

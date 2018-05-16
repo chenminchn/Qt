@@ -9,15 +9,30 @@
 #include "finddialog.h"
 #include <QMenuBar>
 #include <QToolBar>
+#include <QStatusBar>
+#include <QLabel>
+//#include <QStringList>
+#include <QTableWidgetItem>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
+    qDebug()<<tr("[FILE:")<<"__FILE__"<<",LINE"<<"__LINE__"<<",FUNC"<<"__FUNCTION__:"<<"open file failed]";
     spreadsheet=new spreadSheet(this);
-    aboutdialog=new aboutDialog(this);
-    p_finddialog=new findDialog(this);
+
+#ifdef
+
+    //aboutdialog=new aboutDialog(this);
+    //p_finddialog=new findDialog(this);
+    setCentralWidget(spreadsheet);
+    setMinimumSize(600,500);
 	createActions();
     createMenus();
+    createToolBars();
     createContextMenu();
+    createStatusBar();
 }
 
 void MainWindow::createActions()
@@ -224,8 +239,32 @@ void MainWindow::createToolBars()
     editToolBar->addAction(gotocellAction);
 }
 
+void MainWindow::createStatusBar()
+{
+    locationLabel=new QLabel(tr("W999"),this);
+    locationLabel->setAlignment(Qt::AlignCenter);
+    locationLabel->setMinimumSize(locationLabel->sizeHint());
+
+    formulaLabel=new QLabel(tr("test"),this);
+    formulaLabel->setIndent(3);
+
+    statusBar()->addWidget(locationLabel);
+    statusBar()->addWidget(formulaLabel,1);//1是伸展因子，可以将formulaLabel伸展
+
+    connect(spreadsheet,SIGNAL(currentCellChangebdd(int,int,int,int)),this,SLOT(updateStatusBar()));
+    updateStatusBar();
+}
+
+void MainWindow::updateStatusBar()
+{
+    locationLabel->setText(spreadsheet->currentLocation());
+    formulaLabel->setText(spreadsheet->currentFormula());
+}
+
 void MainWindow::newFile()
 {
+    //文件未修改
+
 
 }
 
@@ -234,9 +273,32 @@ void MainWindow::openFile()
 
 }
 
-void MainWindow::saveFile()
-{
+void MainWindow::saveFile(){
+    if(isWindowModified()){
+        if(!m_fileName.isEmpty()){
+            QFile file(m_fileName);
+            if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
+                qDebug()<<tr("[FILE:")<<"__FILE__"<<",LINE"<<"__LINE__"<<",FUNC"<<"__FUNCTION__:"<<"open file failed]";
+                return;
+            }
+            QTextStream out(&file);
+            QTableWidgetItem *item;
+            for(int row=0;row<spreadsheet->rowCount();row++){
+                for(int col=0;col<spreadsheet->columnCount()-1;col++){
+                    item=spreadsheet->item(row,col);
+                    out<<item->data(Qt::DisplayRole).toString();
+//------------------------分割线-----------------------------------------
+                }
+            }
+            file.close();
+        }
+        else{
+             //m_fileName isEmpty
 
+
+        }
+    }
+    return;
 }
 
 void MainWindow::saveAsFile()

@@ -10,6 +10,7 @@ class QMenu;
 class findDialog;
 class QMenuBar;
 class QToolBar;
+class QLabel;
 
 class MainWindow : public QMainWindow
 {
@@ -42,12 +43,16 @@ private slots:
 	//help
 	void aboutSlot();
 
+    //status Bar
+    void updateStatusBar();
+
 
 private:
 	void createActions();
 	void createMenus();
     void createContextMenu();
     void createToolBars();
+    void createStatusBar();
 
 	//file
 	QAction *newAction;
@@ -93,8 +98,14 @@ private:
     QToolBar *fileToolBar;
     QToolBar *editToolBar;
 
+    //status bar
+    QLabel *locationLabel;
+    QLabel *formulaLabel;
+
 	spreadSheet *spreadsheet;
 	aboutDialog *aboutdialog;
 	findDialog *p_finddialog;
+
+    QString m_fileName;
 };
 #endif
