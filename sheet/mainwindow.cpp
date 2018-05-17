@@ -11,18 +11,18 @@
 #include <QToolBar>
 #include <QStatusBar>
 #include <QLabel>
-//#include <QStringList>
 #include <QTableWidgetItem>
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QVariant>
+#include <QFileDialog>
+#include <QString>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
-    qDebug()<<tr("[FILE:")<<"__FILE__"<<",LINE"<<"__LINE__"<<",FUNC"<<"__FUNCTION__:"<<"open file failed]";
     spreadsheet=new spreadSheet(this);
 
-#ifdef
 
     //aboutdialog=new aboutDialog(this);
     //p_finddialog=new findDialog(this);
@@ -274,7 +274,7 @@ void MainWindow::openFile()
 }
 
 void MainWindow::saveFile(){
-    if(isWindowModified()){
+/*    if(isWindowModified()){
         if(!m_fileName.isEmpty()){
             QFile file(m_fileName);
             if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
@@ -287,7 +287,6 @@ void MainWindow::saveFile(){
                 for(int col=0;col<spreadsheet->columnCount()-1;col++){
                     item=spreadsheet->item(row,col);
                     out<<item->data(Qt::DisplayRole).toString();
-//------------------------分割线-----------------------------------------
                 }
             }
             file.close();
@@ -298,12 +297,54 @@ void MainWindow::saveFile(){
 
         }
     }
-    return;
+    return;*/
+
+    //文件名存在》是一个已经存在的文件
+    if(!m_fileName.isEmpty()){
+        QFile file(m_fileName);
+        if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
+            qDebug("open file failed");
+            return;
+        }
+        QTextStream output(&file);
+        QTableWidgetItem *tempItem;
+        for(int row=0;row<spreadsheet->rowCount()-1;row++){
+            for(int col=0;col<spreadsheet->colorCount();col++){
+                tempItem=spreadsheet->item(row,col);
+                output<<tempItem->data(Qt::DisplayRole).toString();
+            }
+        }
+        file.flush();
+        file.close();
+    }
+    //文件名不存在》是一个新建的文件
+    else{
+        saveAsFile();
+    }
+
 }
 
 void MainWindow::saveAsFile()
 {
-
+    QString *selected=new QString("Sheet files(*.sht)");
+    QString filePath=QFileDialog::getSaveFileName(this, tr("Save File"),
+                                                  "/home/cm/Qt/sheet/untitled.sht",
+                                                  "Sheet files(*.sht);;Text files (*.txt);;XML files (*.xml)",selected);
+    QFile file(filePath);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
+        qDebug("open file failed");
+        return;
+    }
+    QTextStream output(&file);
+    QTableWidgetItem *tempItem;
+    for(int row=0;row<spreadsheet->rowCount()-1;row++){
+        for(int col=0;col<spreadsheet->colorCount();col++){
+            tempItem=spreadsheet->item(row,col);
+            output<<tempItem->data(Qt::DisplayRole).toString();
+        }
+    }
+    file.flush();
+    file.close();
 }
 
 void MainWindow::openRecentFile()
