@@ -19,6 +19,9 @@
 #include <QFileDialog>
 #include <QString>
 #include <QVector>
+#include <QMessageBox>
+#include <QCloseEvent>
+#include <QList>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
@@ -55,13 +58,13 @@ void MainWindow::createActions()
 	saveAction->setIcon(QIcon(":/images/save.png"));
     saveAction->setShortcut(QKeySequence::Save);
 	saveAction->setStatusTip(tr("Save spreadsheet."));
-	connect(saveAction,SIGNAL(triggered()),this,SLOT(saveFile()));
+	connect(saveAction,SIGNAL(triggered()),this,SLOT(save()));
 
 	saveAsAction=new QAction(tr("&Save As..."),this);
 	saveAsAction->setIcon(QIcon(":/images/save.png"));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
 	saveAsAction->setStatusTip(tr("Save spreadsheet."));
-	connect(saveAsAction,SIGNAL(triggered()),this,SLOT(saveAsFile()));
+	connect(saveAsAction,SIGNAL(triggered()),this,SLOT(saveAs()));
 
 	for(int i=0;i<MaxRecentFiles;i++)
 	{
@@ -166,7 +169,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-
+    if(okToContinue()){
+        writeSettings();
+        event->accept();
+    }
+    else{
+        event->ignore();
+    }
 }
 
 void MainWindow::createMenus()
@@ -265,43 +274,94 @@ void MainWindow::updateStatusBar()
 void MainWindow::newFile()
 {
     //文件未修改
-    if(spreadsheet->isWindowModified()){
-
+    if(okToContinue()){
+        spreadsheet->clear();
+        setCurrentFile("");
     }
-    //文件已修改
-
+}
+bool MainWindow::okToContinue(){
+    if(isWindowModified()){
+        int r=QMessageBox::warning(this, tr("Spreadsheet"), tr("The document has been modified.\n "
+                                                               "Do you want to save your changes?"), 
+                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        if(r==QMessageBox::Yes){
+            return save();
+        }else if(r==QMessageBox::Cancel){
+            return false;
+        }       
+    }
+    return true;
 }
 
 void MainWindow::openFile()
 {
-
+    if(okToContinue()){
+        QString fileName=QFileDialog::getOpenFileName(this,tr("Open Spreadsheet"),".","Spreadsheet files (*sp)");
+        if(!fileName.isEmpty())
+            loadFile(fileName);
+    }
 }
 
-void MainWindow::saveFile(){
+bool MainWindow::loadFile(const QString& file){
+    if(!spreadsheet->readFile(file)){
+        statusBar()->showMessage(tr("loading canceled"),2000);
+        return false;
+    }
+    setCurrentFile(file);
+    statusBar()->showMessage(tr("file loaded"),2000);
+    return true;
+}
+
+void MainWindow::setCurrentFile(const QString& file){
+    m_fileName=file;
+    setWindowModified(false);
+    QString shownName=tr("Untitled");
+    if(!m_fileName.isEmpty()){
+        shownName=strippedName(m_fileName);
+        recentFiles.removeAll(m_fileName);
+        recentFiles.prepend(m_fileName);
+        updateRecentFileActions(); 
+    }
+    setWindowTitle(tr("%1[*]-%").arg(shownName).arg(tr("Spreadsheet")));
+}
+
+void MainWindow::updateRecentFileActions(){
+    
+}
+
+QString& MainWindow::strippedName(const QString& fileName){
+    
+}
+
+bool MainWindow::save(){
     //文件名存在》是一个已经存在的文件
     if(!m_fileName.isEmpty()){
-        save();
+        return saveFile(m_fileName);
     }
     //文件名不存在》是一个新建的文件
     else{
-        saveAsFile();
+        return saveAs();
     }
 
 }
 
-void MainWindow::saveAsFile()
+bool MainWindow::saveAs()
 {
-    QString *selected=new QString("Text files (*.txt)");
+    /*QString *selected=new QString("Text files (*.txt)");
     m_fileName=QFileDialog::getSaveFileName(this, tr("Save File"),
                                                   "/home/cm/Qt/sheet/untitled.sht",
                                                   "Sheet files(*.sht);;Text files (*.txt);;XML files (*.xml)",selected);
     save();
     delete selected;
-    selected=NULL;
+    selected=NULL;*/
+    QString fileName=QFileDialog::getSaveFileName(this,tr("save spreadsheet"),".",tr("Spreadsheet files(.sp)"));
+    if(fileName.isEmpty())
+        return false;
+    return saveFile(fileName);
 }
 
-void MainWindow::save(){
-    QFile file(m_fileName);
+bool MainWindow::saveFile(const QString& fileName){
+    /*QFile file(m_fileName);
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
         qDebug("open file failed");
         return;
@@ -331,7 +391,15 @@ void MainWindow::save(){
         }
     }
     file.flush();
-    file.close();
+    file.close();*/
+    if(!spreadsheet->writeFile(fileName)){
+        statusBar()->showMessage(tr("saving canceled"),2000);
+        return false;
+    }
+    else{
+        statusBar()->showMessage(tr("file saved"),2000);
+        return true;
+    }
 }
 
 void MainWindow::openRecentFile()
