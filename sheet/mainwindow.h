@@ -53,6 +53,7 @@ private:
     void createContextMenu();
     void createToolBars();
     void createStatusBar();
+    void save();
 
 	//file
 	QAction *newAction;
