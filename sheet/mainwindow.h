@@ -3,14 +3,15 @@
 
 #include <QMainWindow>
 
-class QAction;
 class spreadSheet;
 class aboutDialog;
-class QMenu;
 class findDialog;
+class QMenu;
+class QAction;
 class QMenuBar;
 class QToolBar;
 class QLabel;
+class QStringList;
 
 class MainWindow : public QMainWindow
 {
@@ -27,10 +28,10 @@ private slots:
 	//file
 	void newFile();
 	void openFile();
-	void saveFile();
-	void saveAsFile();
+    bool save();
+    bool saveAs();
 	void openRecentFile();
-	void slot_findDialog();
+    void find();
     //edit
     void slot_findNext(const QString& text,Qt::CaseSensitivity cs);
     void slot_findPrevious(const QString& text,Qt::CaseSensitivity cs);
@@ -53,7 +54,13 @@ private:
     void createContextMenu();
     void createToolBars();
     void createStatusBar();
-    void save();
+    bool saveFile(const QString& fileName);
+    bool okToContinue();
+    bool loadFile(const QString& file);
+    void setCurrentFile(const QString& file);
+    QString strippedName(const QString& fileName);
+    void updateRecentFileActions();
+    void writeSettings();
 
 	//file
 	QAction *newAction;
@@ -108,5 +115,7 @@ private:
 	findDialog *p_finddialog;
 
     QString m_fileName;
+    QStringList recentFiles;
+
 };
 #endif

@@ -13,7 +13,7 @@ class findDialog : public QDialog
 {
     Q_OBJECT
 public:
-	findDialog(QWidget *parent=0);
+    explicit findDialog(QWidget *parent=0);
 	~findDialog(); 
 signals:
     void findNext(const QString&,Qt::CaseSensitivity);

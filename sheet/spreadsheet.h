@@ -9,6 +9,8 @@ public:
 	bool autoRecalculate();
     QString& currentLocation();
     QString& currentFormula();
+    bool readFile(const QString& fileName);
+    bool writeFile(const QString& fileName);
 
 public slots:
 	void slot_setShowGrid(bool flag);
@@ -21,7 +23,10 @@ public slots:
 	void slot_recalculate();
 	void slot_sort();
 	void slot_setAutoRecalculate(bool flag);
+    void findNext(const QString& str,Qt::CaseSensitivity);
+    void findPrevious(const QString& str,Qt::CaseSensitivity);
 private:
+
 	bool m_showgrid;
 	bool m_autoRecalculate;
     QString m_currentLocation;

@@ -9,7 +9,7 @@
 #include "finddialog.h"
 
 
-findDialog::findDialog(QWidget *parent):QDialog(parent),currentText("")
+findDialog::findDialog(QWidget *parent):QDialog(parent)
 {
     setWindowIcon(QIcon(":/images/magnifier.png"));
 	setWindowTitle(tr("Find"));

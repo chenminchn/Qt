@@ -1,12 +1,13 @@
+#include <QMutableStringListIterator>
 #include "mainwindow.h"
+#include "spreadsheet.h"
+#include "aboutdialog.h"
+#include "finddialog.h"
 #include <QApplication>
 #include <QIcon>
 #include <QKeySequence>
 #include <QAction>
-#include "spreadsheet.h"
-#include "aboutdialog.h"
 #include <QMenu>
-#include "finddialog.h"
 #include <QMenuBar>
 #include <QToolBar>
 #include <QStatusBar>
@@ -19,14 +20,14 @@
 #include <QFileDialog>
 #include <QString>
 #include <QVector>
+#include <QMessageBox>
+#include <QCloseEvent>
+#include <QStringList>
+#include <QFileInfo>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
-    spreadsheet=new spreadSheet(this);
-
-
-    //aboutdialog=new aboutDialog(this);
-    //p_finddialog=new findDialog(this);
+    //spreadsheet=new spreadSheet(this);
     setCentralWidget(spreadsheet);
     setMinimumSize(600,500);
 	createActions();
@@ -55,13 +56,13 @@ void MainWindow::createActions()
 	saveAction->setIcon(QIcon(":/images/save.png"));
     saveAction->setShortcut(QKeySequence::Save);
 	saveAction->setStatusTip(tr("Save spreadsheet."));
-	connect(saveAction,SIGNAL(triggered()),this,SLOT(saveFile()));
+    connect(saveAction,SIGNAL(triggered()),this,SLOT(save()));
 
 	saveAsAction=new QAction(tr("&Save As..."),this);
 	saveAsAction->setIcon(QIcon(":/images/save.png"));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
 	saveAsAction->setStatusTip(tr("Save spreadsheet."));
-	connect(saveAsAction,SIGNAL(triggered()),this,SLOT(saveAsFile()));
+    connect(saveAsAction,SIGNAL(triggered()),this,SLOT(saveAs()));
 
 	for(int i=0;i<MaxRecentFiles;i++)
 	{
@@ -118,7 +119,7 @@ void MainWindow::createActions()
     findAction->setIcon(QIcon(":/images/find.png"));
     findAction->setShortcut(QKeySequence::Find);
 	findAction->setStatusTip(tr("Find"));
-	connect(findAction,SIGNAL(triggered()),this,SLOT(slot_findDialog()));
+    connect(findAction,SIGNAL(triggered()),this,SLOT(find()));
 
     gotocellAction=new QAction(tr("&Go to Cell..."),this);
     gotocellAction->setIcon(QIcon(":/images/gotocell.png"));
@@ -166,6 +167,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    if(okToContinue()){
+        writeSettings();
+        event->accept();
+    }
+    else{
+        event->ignore();
+    }
+}
+
+void MainWindow::writeSettings(){
 
 }
 
@@ -265,43 +276,113 @@ void MainWindow::updateStatusBar()
 void MainWindow::newFile()
 {
     //文件未修改
-    if(spreadsheet->isWindowModified()){
-
+    if(okToContinue()){
+        spreadsheet->clear();
+        setCurrentFile("");
     }
-    //文件已修改
-
+}
+bool MainWindow::okToContinue(){
+    if(isWindowModified()){
+        int r=QMessageBox::warning(this, tr("Spreadsheet"), tr("The document has been modified.\n "
+                                                               "Do you want to save your changes?"),
+                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        if(r==QMessageBox::Yes){
+            return save();
+        }else if(r==QMessageBox::Cancel){
+            return false;
+        }
+    }
+    return true;
 }
 
 void MainWindow::openFile()
 {
-
+    if(okToContinue()){
+        QString fileName=QFileDialog::getOpenFileName(this,tr("Open Spreadsheet"),".","Spreadsheet files (*sp)");
+        if(!fileName.isEmpty())
+            loadFile(fileName);
+    }
 }
 
-void MainWindow::saveFile(){
+bool MainWindow::loadFile(const QString& file){
+    if(!spreadsheet->readFile(file)){
+        statusBar()->showMessage(tr("loading canceled"),2000);
+        return false;
+    }
+    setCurrentFile(file);
+    statusBar()->showMessage(tr("file loaded"),2000);
+    return true;
+}
+
+void MainWindow::setCurrentFile(const QString& file){
+    m_fileName=file;
+    setWindowModified(false);
+    QString shownName=tr("Untitled");
+    if(!m_fileName.isEmpty()){
+        shownName=strippedName(m_fileName);
+        recentFiles.removeAll(m_fileName);
+        recentFiles.prepend(m_fileName);
+        updateRecentFileActions();
+    }
+    setWindowTitle(tr("%1[*]-%2").arg(shownName).arg(tr("Spreadsheet")));
+}
+
+QString MainWindow::strippedName(const QString& fileName){
+    return QFileInfo(fileName).fileName();
+}
+
+void MainWindow::updateRecentFileActions(){
+    QMutableStringListIterator it(recentFiles);
+    while(it.hasNext()){//java風格迭代器，指向begin之前，每次hasnext迭代器自動加一
+        if(!QFile::exists(it.next())){
+            it.remove();
+        }
+    }
+    for(int i=0;i<MaxRecentFiles;i++){
+        if(i<recentFiles.count()){
+            QString text=tr("&%1 %2").arg(i+1).arg(strippedName(recentFiles[i]));
+            recentFileAction[i]->setText(text);
+            recentFileAction[i]->setData(QVariant(recentFiles[i]));
+            recentFileAction[i]->setVisible(true);
+        }
+        else{
+            recentFileAction[i]->setVisible(false);
+        }
+    }
+    if(recentFiles.count()==0){
+        separatorAction->setVisible(false);
+    }
+}
+
+bool MainWindow::save(){
     //文件名存在》是一个已经存在的文件
     if(!m_fileName.isEmpty()){
-        save();
+        return saveFile(m_fileName);
     }
     //文件名不存在》是一个新建的文件
     else{
-        saveAsFile();
+        return saveAs();
     }
 
 }
 
-void MainWindow::saveAsFile()
+bool MainWindow::saveAs()
 {
-    QString *selected=new QString("Text files (*.txt)");
+    /*QString *selected=new QString("Text files (*.txt)");
     m_fileName=QFileDialog::getSaveFileName(this, tr("Save File"),
                                                   "/home/cm/Qt/sheet/untitled.sht",
                                                   "Sheet files(*.sht);;Text files (*.txt);;XML files (*.xml)",selected);
     save();
     delete selected;
-    selected=NULL;
+    selected=NULL;*/
+    QString fileName=QFileDialog::getSaveFileName(this,tr("save spreadsheet"),".",tr("Spreadsheet files(.sp)"));
+    if(fileName.isEmpty())
+        return false;
+    return saveFile(fileName);
 }
 
-void MainWindow::save(){
-    QFile file(m_fileName);
+bool MainWindow::saveFile(const QString& fileName){
+    /*QFile file(m_fileName);
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text)){
         qDebug("open file failed");
         return;
@@ -331,12 +412,25 @@ void MainWindow::save(){
         }
     }
     file.flush();
-    file.close();
+    file.close();*/
+    if(!spreadsheet->writeFile(fileName)){
+        statusBar()->showMessage(tr("saving canceled"),2000);
+        return false;
+    }
+    else{
+        statusBar()->showMessage(tr("file saved"),2000);
+        return true;
+    }
 }
 
 void MainWindow::openRecentFile()
 {
-
+    if(okToContinue()){
+        QAction *action=qobject_cast<QAction*>(sender());
+        if(action){
+            loadFile(action->data().toString());
+        }
+    }
 }
 
 void MainWindow::selectAll()
@@ -364,8 +458,17 @@ void MainWindow::aboutSlot()
 	aboutdialog->show();
 }
 
-void MainWindow::slot_findDialog()
+void MainWindow::find()
 {
-	p_finddialog->show();//MainWindow与findDialog的事件处理层次？
+    if(!p_finddialog){
+        p_finddialog=new findDialog(this);
+        connect(p_finddialog,SIGNAL(findNext(QString,Qt::CaseSensitivity)),
+                spreadsheet,SLOT(findNext(QString,Qt::CaseSensitivity)));
+        connect(p_finddialog,SIGNAL(findPrevious(QString,Qt::CaseSensitivity)),
+                spreadsheet,SLOT(findPrevious(QString,Qt::CaseSensitivity)));
+    }
+    p_finddialog->show();
+    p_finddialog->raise();
+    p_finddialog->activateWindow();
 }
 

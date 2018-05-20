@@ -21,6 +21,14 @@ spreadSheet::~spreadSheet()
 {
 
 }
+
+bool spreadSheet::readFile(const QString& fileName){
+
+}
+
+bool spreadSheet::writeFile(const QString& fileName){
+
+}
 QString& spreadSheet::currentLocation()
 {
     return m_currentLocation;
@@ -89,6 +97,13 @@ bool spreadSheet::autoRecalculate()
 void spreadSheet::slot_setAutoRecalculate(bool flag)
 {
 	m_autoRecalculate=flag;
+}
+
+void spreadSheet::findNext(const QString& str,Qt::CaseSensitivity){
+
+}
+void spreadSheet::findPrevious(const QString& str,Qt::CaseSensitivity){
+
 }
 
 
