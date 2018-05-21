@@ -1,8 +1,9 @@
-#include <QMutableStringListIterator>
+
 #include "mainwindow.h"
 #include "spreadsheet.h"
 #include "aboutdialog.h"
 #include "finddialog.h"
+#include "gotocelldialog.h"
 #include <QApplication>
 #include <QIcon>
 #include <QKeySequence>
@@ -24,10 +25,11 @@
 #include <QCloseEvent>
 #include <QStringList>
 #include <QFileInfo>
+#include <QMutableStringListIterator>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
-    //spreadsheet=new spreadSheet(this);
+    spreadsheet=new spreadSheet(this);
     setCentralWidget(spreadsheet);
     setMinimumSize(600,500);
 	createActions();
@@ -125,7 +127,7 @@ void MainWindow::createActions()
     gotocellAction->setIcon(QIcon(":/images/gotocell.png"));
     gotocellAction->setShortcut(tr("Ctrl+G"));
     gotocellAction->setStatusTip(tr("Go to cell"));
-    connect(gotocellAction,SIGNAL(triggered()),SLOT(slot_goToCellDialog()));
+    connect(gotocellAction,SIGNAL(triggered()),SLOT(goToCell()));
 
 	//Tools
 	recalculateAction=new QAction(tr("&Recalculate"),this);
@@ -448,9 +450,13 @@ void MainWindow::slot_findPrevious(const QString &text, Qt::CaseSensitivity cs)
 
 }
 
-void MainWindow::slot_goToCellDialog()
+void MainWindow::goToCell()
 {
-
+    goToCellDialog dialog(this);
+    if(dialog.exec()){
+        QString str=dialog.lineEdit->text().toUpper();
+        spreadsheet->setCurrentCell(str.mid(1).toInt()-1,str[0].unicode()-'A');
+    }
 }
 
 void MainWindow::aboutSlot()
@@ -462,10 +468,10 @@ void MainWindow::find()
 {
     if(!p_finddialog){
         p_finddialog=new findDialog(this);
-        connect(p_finddialog,SIGNAL(findNext(QString,Qt::CaseSensitivity)),
-                spreadsheet,SLOT(findNext(QString,Qt::CaseSensitivity)));
-        connect(p_finddialog,SIGNAL(findPrevious(QString,Qt::CaseSensitivity)),
-                spreadsheet,SLOT(findPrevious(QString,Qt::CaseSensitivity)));
+        connect(p_finddialog,SIGNAL(findNext(const QString&,Qt::CaseSensitivity)),
+                spreadsheet,SLOT(findNext(const QString&,Qt::CaseSensitivity)));
+        connect(p_finddialog,SIGNAL(findPrevious(const QString&,Qt::CaseSensitivity)),
+                spreadsheet,SLOT(findPrevious(const QString&,Qt::CaseSensitivity)));
     }
     p_finddialog->show();
     p_finddialog->raise();

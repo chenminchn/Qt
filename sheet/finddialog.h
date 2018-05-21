@@ -19,10 +19,11 @@ signals:
     void findNext(const QString&,Qt::CaseSensitivity);
     void findPrevious(const QString&,Qt::CaseSensitivity);
 
+
 private slots:
-	void slot_enableFindButton(const QString& str);
-	void slot_findButtonClicked();
-	void slot_closeButtonClicked();
+    void enableFindButton(const QString& str);
+    void findButtonClicked();
+    void closeButtonClicked();
 
 private:
 	QLabel *label;

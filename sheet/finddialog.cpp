@@ -25,6 +25,8 @@ findDialog::findDialog(QWidget *parent):QDialog(parent)
 	findButton->setEnabled(true);
 	closeButton=new QPushButton(tr("Close"),this);
 
+    QHBoxLayout *mainLayout=new QHBoxLayout(this);
+
 	QHBoxLayout *topLeftLayout=new QHBoxLayout(this);
 	topLeftLayout->addWidget(label);
 	topLeftLayout->addWidget(lineEdit);
@@ -41,7 +43,6 @@ findDialog::findDialog(QWidget *parent):QDialog(parent)
 	rightLayout->addWidget(findButton);
 	rightLayout->addWidget(closeButton);
 
-	QHBoxLayout *mainLayout=new QHBoxLayout(this);
 	mainLayout->addLayout(leftLayout);
 	mainLayout->addLayout(rightLayout);
 	setLayout(mainLayout);
@@ -49,12 +50,12 @@ findDialog::findDialog(QWidget *parent):QDialog(parent)
 	setWindowTitle(tr("Find"));
 	setFixedHeight(sizeHint().height());
 
-	connect(lineEdit,SIGNAL(textChanged(const QString&)),this,SLOT(slot_enableFindButton(const QString&)));//同一窗口中的不同部件可以相互发送信号
-	connect(findButton,SIGNAL(clicked()),this,SLOT(slot_findButtonClicked()));
-	connect(closeButton,SIGNAL(clicked()),this,SLOT(slot_closeButtonClicked()));
+    connect(lineEdit,SIGNAL(textChanged(const QString&)),this,SLOT(enableFindButton(const QString&)));//同一窗口中的不同部件可以相互发送信号
+    connect(findButton,SIGNAL(clicked()),this,SLOT(findButtonClicked()));
+    connect(closeButton,SIGNAL(clicked()),this,SLOT(closeButtonClicked()));
 
-    connect(this,SIGNAL(findPrevious(QString,Qt::CaseSensitivity)),parentWindow,SLOT(slot_findPrevious(QString,Qt::CaseSensitivity)));
-    connect(this,SIGNAL(findNext(QString,Qt::CaseSensitivity)),parentWindow,SLOT(slot_findNext(QString,Qt::CaseSensitivity)));
+    //connect(this,SIGNAL(findPrevious(QString,Qt::CaseSensitivity)),parentWindow,SLOT(slot_findPrevious(QString,Qt::CaseSensitivity)));
+    //connect(this,SIGNAL(findNext(QString,Qt::CaseSensitivity)),parentWindow,SLOT(slot_findNext(QString,Qt::CaseSensitivity)));
             //connect(this,SIGNAL(sig_findButtonClicked(const QString& text)),parentWindow,SLOT(slot_find(const QString& text)));
 }
 
@@ -63,12 +64,12 @@ findDialog::~findDialog()
 
 }
 
-void findDialog::slot_enableFindButton(const QString& str)
+void findDialog::enableFindButton(const QString& str)
 {
 	findButton->setEnabled(!str.isEmpty());
 }
 
-void findDialog::slot_findButtonClicked()
+void findDialog::findButtonClicked()
 {
 	currentText=lineEdit->text();
     Qt::CaseSensitivity cs=caseCheckBox->isChecked()?(Qt::CaseSensitive):(Qt::CaseInsensitive);
@@ -82,7 +83,7 @@ void findDialog::slot_findButtonClicked()
  	}
 }
 
-void findDialog::slot_closeButtonClicked()
+void findDialog::closeButtonClicked()
 {
 	currentText=lineEdit->text();
     //to do

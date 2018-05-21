@@ -21,7 +21,7 @@ public slots:
 	void slot_selectRow();
 	void slot_selectColumn();
 	void slot_recalculate();
-	void slot_sort();
+	void sort();
 	void slot_setAutoRecalculate(bool flag);
     void findNext(const QString& str,Qt::CaseSensitivity);
     void findPrevious(const QString& str,Qt::CaseSensitivity);

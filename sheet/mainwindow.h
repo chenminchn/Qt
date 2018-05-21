@@ -35,7 +35,7 @@ private slots:
     //edit
     void slot_findNext(const QString& text,Qt::CaseSensitivity cs);
     void slot_findPrevious(const QString& text,Qt::CaseSensitivity cs);
-    void slot_goToCellDialog();
+    void goToCell();
 
 	//edit
 	void selectAll();
@@ -112,7 +112,7 @@ private:
 
 	spreadSheet *spreadsheet;
 	aboutDialog *aboutdialog;
-	findDialog *p_finddialog;
+    findDialog *p_finddialog=NULL;
 
     QString m_fileName;
     QStringList recentFiles;
