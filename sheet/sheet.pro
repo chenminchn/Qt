@@ -10,12 +10,12 @@ TARGET = sheet
 INCLUDEPATH += .
 
 # Input
-HEADERS += aboutdialog.h finddialog.h mainwindow.h spreadsheet.h \
+HEADERS += finddialog.h mainwindow.h spreadsheet.h \
     gotocelldialog.h \
     ui_gotocelldialog.h \
     sortdialog.h \
     ui_sortdialog.h
-SOURCES += aboutdialog.cpp \
+SOURCES += \
            finddialog.cpp \
            main.cpp \
            mainwindow.cpp \

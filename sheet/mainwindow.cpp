@@ -1,7 +1,10 @@
-
+#include <QRect>
+#include <QSettings>
+#include <QListIterator>
+#include <QTableWidgetSelectionRange>
+#include "sortdialog.h"
 #include "mainwindow.h"
 #include "spreadsheet.h"
-#include "aboutdialog.h"
 #include "finddialog.h"
 #include "gotocelldialog.h"
 #include <QApplication>
@@ -29,6 +32,7 @@
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
+
     spreadsheet=new spreadSheet(this);
     setCentralWidget(spreadsheet);
     setMinimumSize(600,500);
@@ -37,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
     createToolBars();
     createContextMenu();
     createStatusBar();
+    readSettings();
 }
 
 void MainWindow::createActions()
@@ -72,6 +77,12 @@ void MainWindow::createActions()
         recentFileAction[i]->setVisible(false);
         connect(recentFileAction[i],SIGNAL(triggered()),this,SLOT(openRecentFile()));
 	}
+
+    closeAction=new QAction(tr("&Close"),this);
+    closeAction->setShortcut(tr("Ctrl+W"));
+    closeAction->setIcon(QIcon(":/images/close.png"));
+    closeAction->setStatusTip(tr("close"));
+    connect(closeAction,SIGNAL(triggered()),this,SLOT(close()));
 
 	exitAction=new QAction(tr("&Exit"),this);
 	exitAction->setIcon(QIcon(":/images/exit.png"));
@@ -137,7 +148,7 @@ void MainWindow::createActions()
 
 	sortAction=new QAction(tr("&Sort..."),this);
     sortAction->setStatusTip(tr("Sort"));
-    connect(sortAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_sort()));
+    connect(sortAction,SIGNAL(triggered()),this,SLOT(sort()));
 
 	//options
 	showGridAction=new QAction(tr("Show Grid"),this);
@@ -155,11 +166,11 @@ void MainWindow::createActions()
     //Help
 	aboutAction=new QAction(tr("&About"),this);
 	aboutAction->setStatusTip(tr("About this application."));
-	connect(aboutAction,SIGNAL(triggered()),this,SLOT(aboutSlot()));
+    connect(aboutAction,SIGNAL(triggered()),this,SLOT(about()));
 
 	aboutQtAction=new QAction(tr("About &Qt"),this);
 	aboutAction->setStatusTip(tr("Show the Qt library's About box."));
-	connect(aboutAction,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
+    connect(aboutQtAction,SIGNAL(triggered()),qApp,SLOT(aboutQt()));
 }
 
 MainWindow::~MainWindow()
@@ -178,10 +189,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void MainWindow::writeSettings(){
-
-}
-
 void MainWindow::createMenus()
 {
 
@@ -191,12 +198,16 @@ void MainWindow::createMenus()
     fileMenu->addAction(openAction);
     fileMenu->addAction(saveAction);
     fileMenu->addAction(saveAsAction);
+
     separatorAction=fileMenu->addSeparator();//为什么这里要保存变量？
+    separatorAction->setVisible(false);
+
     for(int i=0;i<MaxRecentFiles;i++)
     {
         fileMenu->addAction(recentFileAction[i]);
     }
     fileMenu->addSeparator();
+    fileMenu->addAction(closeAction);
     fileMenu->addAction(exitAction);
 
     //Edit menu
@@ -282,6 +293,8 @@ void MainWindow::newFile()
         spreadsheet->clear();
         setCurrentFile("");
     }
+    /*MainWindow w;
+    w.show();*/
 }
 bool MainWindow::okToContinue(){
     if(isWindowModified()){
@@ -340,6 +353,10 @@ void MainWindow::updateRecentFileActions(){
             it.remove();
         }
     }
+    /*if(recentFiles.isEmpty()){
+        separatorAction->setVisible(false);
+    }*/
+
     for(int i=0;i<MaxRecentFiles;i++){
         if(i<recentFiles.count()){
             QString text=tr("&%1 %2").arg(i+1).arg(strippedName(recentFiles[i]));
@@ -347,13 +364,10 @@ void MainWindow::updateRecentFileActions(){
             recentFileAction[i]->setData(QVariant(recentFiles[i]));
             recentFileAction[i]->setVisible(true);
         }
-        else{
+        else if(i>=MaxRecentFiles){
             recentFileAction[i]->setVisible(false);
         }
-    }
-    if(recentFiles.count()==0){
-        separatorAction->setVisible(false);
-    }
+    } 
 }
 
 bool MainWindow::save(){
@@ -459,9 +473,13 @@ void MainWindow::goToCell()
     }
 }
 
-void MainWindow::aboutSlot()
+void MainWindow::about()
 {
-	aboutdialog->show();
+    QMessageBox::about(this, tr("About Spreadsheet"), tr("<h2>Spreadsheet 1.1</h2>"
+                                                         "<p>Copyright &copy 2008 Software Inc.</p>"
+                                                         "Spreadsheet is a small application that demonstrates QAction,"
+                                                         "QMainWindow, QMenuBar, QstatusBar, QTableWidget, QToolBar and "
+                                                         "many other Qt classes"));
 }
 
 void MainWindow::find()
@@ -478,3 +496,53 @@ void MainWindow::find()
     p_finddialog->activateWindow();
 }
 
+//tools
+void MainWindow::sort(){
+    /*sortDialog dialog(this);
+    QList<QTableWidgetSelectionRange> range=spreadsheet->selectedRanges();
+    if(!range.isEmpty()){
+        QListIterator<QTableWidgetSelectionRange> i(range);
+        QTableWidgetSelectionRange temp=i.peekNext();
+        int minLeft=temp.leftColumn();
+        int maxRight=temp.rightColumn();
+        while(i.hasNext()){
+            temp=i.next();
+            if(minLeft>temp.leftColumn())
+                minLeft=temp.leftColumn();
+            if(maxRight<temp.rightColumn())
+                maxRight=temp.rightColumn();
+        }
+        dialog.setColunmRange(minLeft+'A',maxRight+'A');
+    }
+    else{
+        dialog.setColunmRange('A','Z');
+    }
+    if(dialog.exec()){
+
+
+    }*/
+    sortDialog dialog(this);
+    dialog.setSpreadSheet(spreadsheet);
+    dialog.exec();
+}
+
+void MainWindow::readSettings(){
+    QSettings settings("Software Inc","Spreadsheet");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    recentFiles=settings.value("recentFiles").toStringList();
+    updateRecentFileActions();
+    showGridAction->setChecked(settings.value("showGrid",true).toBool());
+    autoRecalculateAction->setChecked(settings.value("autoRecalculateAction",true).toBool());
+}
+
+void MainWindow::writeSettings(){
+    QSettings settings("Software Inc","Spreadsheet");
+    settings.setValue("geometry",saveGeometry());
+    settings.setValue("recentFiles",recentFiles);
+    settings.setValue("showGrid",showGridAction->isChecked());
+    settings.setValue("autoRecalculateAction",autoRecalculateAction->isChecked());
+}
+
+void MainWindow::close(){
+
+}

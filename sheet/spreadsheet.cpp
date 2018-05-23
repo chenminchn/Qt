@@ -84,11 +84,6 @@ void spreadSheet::slot_recalculate()
 
 }
 
-void spreadSheet::slot_sort()
-{
-
-}
-
 bool spreadSheet::autoRecalculate()
 {
 	return m_autoRecalculate;

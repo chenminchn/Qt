@@ -4,7 +4,6 @@
 #include <QMainWindow>
 
 class spreadSheet;
-class aboutDialog;
 class findDialog;
 class QMenu;
 class QAction;
@@ -12,6 +11,7 @@ class QMenuBar;
 class QToolBar;
 class QLabel;
 class QStringList;
+class QRect;
 
 class MainWindow : public QMainWindow
 {
@@ -36,13 +36,15 @@ private slots:
     void slot_findNext(const QString& text,Qt::CaseSensitivity cs);
     void slot_findPrevious(const QString& text,Qt::CaseSensitivity cs);
     void goToCell();
-
-	//edit
 	void selectAll();
+    //tools
+    void sort();
+    void close();
+
 
 
 	//help
-	void aboutSlot();
+    void about();
 
     //status Bar
     void updateStatusBar();
@@ -61,6 +63,7 @@ private:
     QString strippedName(const QString& fileName);
     void updateRecentFileActions();
     void writeSettings();
+    void readSettings();
 
 	//file
 	QAction *newAction;
@@ -70,6 +73,7 @@ private:
 	QAction *separatorAction;
 	enum{MaxRecentFiles=5};
 	QAction *recentFileAction[MaxRecentFiles];
+    QAction *closeAction;
     QAction *exitAction;
 
 	//edit
@@ -111,7 +115,6 @@ private:
     QLabel *formulaLabel;
 
 	spreadSheet *spreadsheet;
-	aboutDialog *aboutdialog;
     findDialog *p_finddialog=NULL;
 
     QString m_fileName;
