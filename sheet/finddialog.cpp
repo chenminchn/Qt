@@ -4,7 +4,6 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QHBoxLayout>
-#include "mainwindow.h"
 #include <QIcon>
 #include "finddialog.h"
 

@@ -1,11 +1,12 @@
 #include "spreadsheet.h"
 #include <QStringList>
 #include <QChar>
+#include <qtablewidget.h>
 
 
 spreadSheet::spreadSheet(QWidget *parent):QTableWidget(parent)
 {
-    setColumnCount(26);
+    /*setColumnCount(26);
     setRowCount(1000);
     QStringList header;
     QChar ch='A';
@@ -15,7 +16,13 @@ spreadSheet::spreadSheet(QWidget *parent):QTableWidget(parent)
         header<<ch;
         ch=ch.unicode()+1;
     }
-    setHorizontalHeaderLabels(header);
+    setHorizontalHeaderLabels(header);*/
+	connect(this, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(somethingChanged()));
+}
+
+void spreadSheet::somethingChanged() {
+	//ÎÄ™n±»ÐÞ¸Ä
+	emit modified();
 }
 spreadSheet::~spreadSheet()
 {
@@ -23,12 +30,13 @@ spreadSheet::~spreadSheet()
 }
 
 bool spreadSheet::readFile(const QString& fileName){
-
+	return true;
 }
 
 bool spreadSheet::writeFile(const QString& fileName){
-
+	return true;
 }
+
 QString& spreadSheet::currentLocation()
 {
     return m_currentLocation;

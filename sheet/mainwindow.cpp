@@ -1,3 +1,4 @@
+#include <QWindow>
 #include <QRect>
 #include <QSettings>
 #include <QListIterator>
@@ -30,8 +31,12 @@
 #include <QFileInfo>
 #include <QMutableStringListIterator>
 
+QStringList MainWindow::recentFiles = {};
+
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
 {
+	init();
+    setAttribute(Qt::WA_DeleteOnClose);
 
     spreadsheet=new spreadSheet(this);
     setCentralWidget(spreadsheet);
@@ -41,7 +46,14 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent)
     createToolBars();
     createContextMenu();
     createStatusBar();
-    readSettings();
+
+	initConnection();
+    
+	readSettings();
+}
+
+void MainWindow::init() {
+
 }
 
 void MainWindow::createActions()
@@ -71,7 +83,7 @@ void MainWindow::createActions()
 	saveAsAction->setStatusTip(tr("Save spreadsheet."));
     connect(saveAsAction,SIGNAL(triggered()),this,SLOT(saveAs()));
 
-	for(int i=0;i<MaxRecentFiles;i++)
+	for(int i=0;i<MaxrecentFiles;i++)
 	{
 		recentFileAction[i]=new QAction(this);
         recentFileAction[i]->setVisible(false);
@@ -88,7 +100,7 @@ void MainWindow::createActions()
 	exitAction->setIcon(QIcon(":/images/exit.png"));
     exitAction->setShortcut(tr("Ctrl+Q"));
 	exitAction->setStatusTip(tr("Exit this application."));
-	connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
+    connect(exitAction,SIGNAL(triggered()),this,SLOT(closeAllWindows()));
 
 	//edit
 	cutAction=new QAction(tr("&Cut"),this);
@@ -202,7 +214,7 @@ void MainWindow::createMenus()
     separatorAction=fileMenu->addSeparator();//为什么这里要保存变量？
     separatorAction->setVisible(false);
 
-    for(int i=0;i<MaxRecentFiles;i++)
+    for(int i=0;i<MaxrecentFiles;i++)
     {
         fileMenu->addAction(recentFileAction[i]);
     }
@@ -286,15 +298,23 @@ void MainWindow::updateStatusBar()
     formulaLabel->setText(spreadsheet->currentFormula());
 }
 
+void MainWindow::initConnection() {
+	connect(spreadsheet, SIGNAL(modified()), this, SLOT(spreadsheetModified()));
+}
+
+void MainWindow::spreadsheetModified() {
+	setWindowModified(true);
+}
+
 void MainWindow::newFile()
 {
     //文件未修改
-    if(okToContinue()){
+    /*if(okToContinue()){
         spreadsheet->clear();
         setCurrentFile("");
-    }
-    /*MainWindow w;
-    w.show();*/
+    }*/
+    MainWindow *mainWin=new MainWindow;
+    mainWin->show();//程序結束後怎样删除？（通过顶级窗口删除吗？lastWindowClosed）
 }
 bool MainWindow::okToContinue(){
     if(isWindowModified()){
@@ -337,7 +357,11 @@ void MainWindow::setCurrentFile(const QString& file){
         shownName=strippedName(m_fileName);
         recentFiles.removeAll(m_fileName);
         recentFiles.prepend(m_fileName);
-        updateRecentFileActions();
+        foreach(QWindow *Win,QApplication::topLevelWindows()){
+            MainWindow *mainWin=qobject_cast<MainWindow*>(Win);
+            if(mainWin)
+                mainWin->updateRecentFileActions();
+        }
     }
     setWindowTitle(tr("%1[*]-%2").arg(shownName).arg(tr("Spreadsheet")));
 }
@@ -357,14 +381,14 @@ void MainWindow::updateRecentFileActions(){
         separatorAction->setVisible(false);
     }*/
 
-    for(int i=0;i<MaxRecentFiles;i++){
+    for(int i=0;i<MaxrecentFiles;i++){
         if(i<recentFiles.count()){
             QString text=tr("&%1 %2").arg(i+1).arg(strippedName(recentFiles[i]));
             recentFileAction[i]->setText(text);
             recentFileAction[i]->setData(QVariant(recentFiles[i]));
             recentFileAction[i]->setVisible(true);
         }
-        else if(i>=MaxRecentFiles){
+        else if(i>=MaxrecentFiles){
             recentFileAction[i]->setVisible(false);
         }
     } 
@@ -530,7 +554,11 @@ void MainWindow::readSettings(){
     QSettings settings("Software Inc","Spreadsheet");
     restoreGeometry(settings.value("geometry").toByteArray());
     recentFiles=settings.value("recentFiles").toStringList();
-    updateRecentFileActions();
+    foreach(QWindow *Win,QApplication::topLevelWindows()){
+        MainWindow *mainWin=qobject_cast<MainWindow*>(Win);
+        if(mainWin)
+            mainWin->updateRecentFileActions();
+    }
     showGridAction->setChecked(settings.value("showGrid",true).toBool());
     autoRecalculateAction->setChecked(settings.value("autoRecalculateAction",true).toBool());
 }
@@ -544,5 +572,9 @@ void MainWindow::writeSettings(){
 }
 
 void MainWindow::close(){
+
+}
+
+void MainWindow::closeAllWindows(){
 
 }

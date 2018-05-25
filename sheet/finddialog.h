@@ -7,7 +7,7 @@ class QLabel;
 class QLineEdit;
 class QCheckBox;
 class QPushButton;
-class MainWindow;
+//class MainWindow;
 
 class findDialog : public QDialog
 {
@@ -33,7 +33,7 @@ private:
 	QPushButton *findButton;
 	QPushButton *closeButton;
 
-	MainWindow *parentWindow;
+	//MainWindow *parentWindow;
 	QString currentText;
 };
 #endif

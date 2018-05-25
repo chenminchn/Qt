@@ -1,9 +1,11 @@
+#include <QSplashScreen>
 #include <QApplication>
-#include "mainwindow.h"
 #include <QMutex>
 #include <QFile>
 #include <QTextStream>
 #include <QDateTime>
+#include <qobject.h>
+#include "mainwindow.h"
 
 void outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -44,12 +46,35 @@ void outputMessage(QtMsgType type, const QMessageLogContext &context, const QStr
     mutex.unlock();
 }
 
+void loadModules(){
+
+}
+
+void establishConnections(){
+
+}
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc,argv);
     qInstallMessageHandler(outputMessage);
-    MainWindow w;
-    w.show();
+    QPixmap pixmap(":/images/splash.png");
+    QSplashScreen *splash=new QSplashScreen;
+    splash->setPixmap(pixmap);
+    splash->show();
+
+    splash->showMessage(QObject::tr("Setting the main window"),Qt::AlignTop|Qt::AlignRight,Qt::white);
+    MainWindow *MainWin=new MainWindow;
+
+    splash->showMessage(QObject::tr("Loading modules..."),Qt::AlignTop|Qt::AlignRight,Qt::white);
+    loadModules();
+
+    splash->showMessage(QObject::tr("Establishing connections..."),Qt::AlignTop|Qt::AlignRight,Qt::white);
+    establishConnections();
+
+    MainWin->show();
+    splash->finish(MainWin);
+    delete splash;
 
 	return app.exec();
 }

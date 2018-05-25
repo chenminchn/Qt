@@ -12,6 +12,9 @@ public:
     bool readFile(const QString& fileName);
     bool writeFile(const QString& fileName);
 
+signals:
+	void modified();
+
 public slots:
 	void slot_setShowGrid(bool flag);
 	void slot_cut();
@@ -24,7 +27,11 @@ public slots:
 	void slot_setAutoRecalculate(bool flag);
     void findNext(const QString& str,Qt::CaseSensitivity);
     void findPrevious(const QString& str,Qt::CaseSensitivity);
+private slots:
+	void somethingChanged();
+
 private:
+	
 
 	bool m_showgrid;
 	bool m_autoRecalculate;
