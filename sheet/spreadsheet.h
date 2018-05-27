@@ -1,4 +1,7 @@
 #include <QTableWidget>
+
+class Cell;
+
 class spreadSheet : public QTableWidget
 {
     Q_OBJECT
@@ -7,9 +10,10 @@ public:
     ~spreadSheet();
 	bool showGrid();
 	bool autoRecalculate();
-    QString& currentLocation();
-    QString& currentFormula();
+    QString currentLocation();
+    QString currentFormula();
     bool readFile(const QString& fileName);
+	void setFormula(int row, int col, QString& str);
     bool writeFile(const QString& fileName);
 
 signals:
@@ -31,10 +35,14 @@ private slots:
 	void somethingChanged();
 
 private:
-	
+	enum { MagicNumber=0x7F51C883, RowCount = 999, ColumnCount = 26 };
+	void recalculate();
+	void clear();
+	Cell *cell(int row, int column) const;
+	QString formula(int row, int column);
 
 	bool m_showgrid;
-	bool m_autoRecalculate;
+	bool autoRecalc;
     QString m_currentLocation;
     QString m_currentFormula;
 };
