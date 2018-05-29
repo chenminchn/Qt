@@ -34,10 +34,9 @@ protected:
 	void openRecentFile();
 	void find();
 	//edit
-	void slot_findNext(const QString& text, Qt::CaseSensitivity cs);
-	void slot_findPrevious(const QString& text, Qt::CaseSensitivity cs);
+	/*void slot_findNext(const QString& text, Qt::CaseSensitivity cs);
+	void slot_findPrevious(const QString& text, Qt::CaseSensitivity cs);*/
 	void goToCell();
-	void selectAll();
 	//tools
 	void sort();
 	void close();

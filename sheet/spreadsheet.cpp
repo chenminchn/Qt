@@ -200,10 +200,9 @@ void spreadSheet::paste()
 
 	if (range.columnCount() == 1) {
 		//情形1：只有一列，行必须为整数倍，不然只粘贴一次
-		if (range.columnCount() % strRowCount != 0||rowFactor==1) {
+		if (range.columnCount() % strRowCount != 0||rowFactor==1)
 			//range.columnCount()%strRowCount!=0,粘贴一次
 			pasteOnce(range.topRow(), range.leftColumn(), str);
-		}
 		else {
 			//range.columnCount()%strRowCount==0，粘贴rowFactor次
 			int TopRow = range.topRow();
@@ -217,10 +216,23 @@ void spreadSheet::paste()
 	}
 	else if (range.columnCount()%strColumnCount==0) {
 		//情形2：列为整数倍，行必须为整数倍，不然只粘贴一次
+		if (range.rowCount() % strRowCount != 0 || range.rowCount() == 1)
+			pasteOnce(range.topRow(), range.leftColumn(), str);
+		else {
+			int TopRow = range.topRow();
+			int LeftColumn = range.leftColumn();
+			for (int i = 0; i < rowFactor; i++) {
+				for (int j = 0; j < columnFactor; j++) {
+					pasteOnce(TopRow + i*strRowCount, LeftColumn + j*strColumnCount, str);
+				}
+			}
+		}
 	}
 	else {
 		//情形3：列不是整数倍，也不等于1，不管行是否是整数倍都只粘贴一次
+		pasteOnce(range.topRow(), range.leftColumn(), str);
 	}
+	somethingChanged();
 }
 
 void spreadSheet::pasteOnce(int TopRow, int LeftColumn,QString str){
@@ -252,6 +264,15 @@ void spreadSheet::pasteOnce(int TopRow, int LeftColumn,QString str){
 	}
 }
 
+QString spreadSheet::text(int row, int col) const
+{
+	Cell *c = cell(row, col);
+	if (!c) {
+		return c->text();
+	}
+	return "";
+}
+
 void spreadSheet::del()
 {
 	QList<QTableWidgetItem*> selected = selectedItems();
@@ -265,14 +286,14 @@ void spreadSheet::del()
 	}
 }
 
-void spreadSheet::slot_selectRow()
+void spreadSheet::selectCurrentRow()
 {
-
+	selectRow(currentRow());
 }
 
-void spreadSheet::slot_selectColumn()
+void spreadSheet::selectCurrentColumn()
 {
-
+	selectColumn(currentColumn());
 }
 
 void spreadSheet::slot_recalculate()
@@ -290,9 +311,23 @@ void spreadSheet::slot_setAutoRecalculate(bool flag)
 	autoRecalc=flag;
 }
 
-void spreadSheet::findNext(const QString& str,Qt::CaseSensitivity){
+void spreadSheet::findNext(const QString& str,Qt::CaseSensitivity cs){
 
+	for (int i = currentRow(); i < RowCount; i++) {
+		for (int j = 0; j < ColumnCount; j++) {
+			//啊用while就好了，真笨，留着长记性吧
+			if (i == currentRow() && j < currentColumn())
+				continue;
+			if (text(i,j).contains(str,cs)) {
+				setCurrentCell(i, j);
+				activateWindow();
+				return;
+			}
+		}
+	}
+	QApplication::beep();	
 }
+
 void spreadSheet::findPrevious(const QString& str,Qt::CaseSensitivity){
 
 }

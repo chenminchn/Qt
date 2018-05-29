@@ -129,16 +129,16 @@ void MainWindow::createActions()
 
 	selectRowAction=new QAction(tr("&Row"),this);
 	selectRowAction->setStatusTip(tr("Select row cells"));
-	connect(selectRowAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_selectRow()));
+	connect(selectRowAction,SIGNAL(triggered()),spreadsheet,SLOT(selectCurrentRow()));
 
 	selectColumnAction=new QAction(tr("&Colunm"),this);
 	selectColumnAction->setStatusTip(tr("Select column cells"));
-	connect(selectColumnAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_selectColumn()));
+	connect(selectColumnAction,SIGNAL(triggered()),spreadsheet,SLOT(selectCurrentColumn()));
 
 	selectAllAction=new QAction(tr("&All"),this);
     selectAllAction->setShortcut(QKeySequence::SelectAll);
 	selectAllAction->setStatusTip(tr("Select all the cells in the spreadsheet."));
-	connect(selectAllAction,SIGNAL(triggered()),this,SLOT(selectAll()));
+	connect(selectAllAction,SIGNAL(triggered()),spreadsheet,SLOT(selectAll()));
 
 	findAction=new QAction(tr("&Find..."),this);
     findAction->setIcon(QIcon(":/images/find.png"));
@@ -471,21 +471,6 @@ void MainWindow::openRecentFile()
             loadFile(action->data().toString());
         }
     }
-}
-
-void MainWindow::selectAll()
-{
-
-}
-
-void MainWindow::slot_findNext(const QString &text, Qt::CaseSensitivity cs)
-{
-
-}
-
-void MainWindow::slot_findPrevious(const QString &text, Qt::CaseSensitivity cs)
-{
-
 }
 
 void MainWindow::goToCell()

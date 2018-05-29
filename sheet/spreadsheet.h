@@ -26,11 +26,11 @@ public slots:
 	void copy();
 	void paste(); 
 	void del();
-	void slot_selectRow();
-	void slot_selectColumn();
+	void selectCurrentRow();
+	void selectCurrentColumn();
 	void slot_recalculate();
 	void slot_setAutoRecalculate(bool flag);
-    void findNext(const QString& str,Qt::CaseSensitivity);
+    void findNext(const QString& str,Qt::CaseSensitivity cs);
     void findPrevious(const QString& str,Qt::CaseSensitivity);
 
 private slots:
@@ -44,6 +44,8 @@ private:
 	QString formula(int row, int column);
 	QTableWidgetSelectionRange selectedRange();
 	void pasteOnce(int TopRow, int LeftColumn, QString str);
+	QString text(int row, int col)const;
+
 
 	bool m_showgrid;
 	bool autoRecalc;
