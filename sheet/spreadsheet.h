@@ -1,4 +1,5 @@
 #include <QTableWidget>
+#include <QTableWidgetSelectionRange>
 
 class Cell;
 
@@ -21,16 +22,17 @@ signals:
 
 public slots:
 	void slot_setShowGrid(bool flag);
-	void slot_cut();
-	void slot_copy();
-	void slot_paste();
-	void slot_delete();
+	void cut();
+	void copy();
+	void paste(); 
+	void del();
 	void slot_selectRow();
 	void slot_selectColumn();
 	void slot_recalculate();
 	void slot_setAutoRecalculate(bool flag);
     void findNext(const QString& str,Qt::CaseSensitivity);
     void findPrevious(const QString& str,Qt::CaseSensitivity);
+
 private slots:
 	void somethingChanged();
 
@@ -40,6 +42,8 @@ private:
 	void clear();
 	Cell *cell(int row, int column) const;
 	QString formula(int row, int column);
+	QTableWidgetSelectionRange selectedRange();
+	void pasteOnce(int TopRow, int LeftColumn, QString str);
 
 	bool m_showgrid;
 	bool autoRecalc;

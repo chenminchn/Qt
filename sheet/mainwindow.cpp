@@ -107,25 +107,25 @@ void MainWindow::createActions()
     cutAction->setIcon(QIcon(":/images/cut.png"));
     cutAction->setShortcut(QKeySequence::Cut);
     cutAction->setStatusTip(tr("Cut cells"));
-	connect(cutAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_cut()));
+	connect(cutAction,SIGNAL(triggered()),spreadsheet,SLOT(cut()));
 
 	copyAction=new QAction(tr("&Copy"),this);
     copyAction->setIcon(QIcon(":/images/copy.png"));
     copyAction->setShortcut(QKeySequence::Copy);
     copyAction->setStatusTip(tr("Copy cells"));
-    connect(copyAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_copy()));
+    connect(copyAction,SIGNAL(triggered()),spreadsheet,SLOT(copy()));
 
 	pasteAction=new QAction(tr("&Paste"),this);
     pasteAction->setIcon(QIcon(":/images/paste.png"));
     pasteAction->setShortcut(QKeySequence::Paste);
     pasteAction->setStatusTip(tr("Paste cells"));
-    connect(pasteAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_paste()));
+    connect(pasteAction,SIGNAL(triggered()),spreadsheet,SLOT(paste()));
 
 	deleteAction=new QAction(tr("&Delete"),this);
     deleteAction->setIcon(QIcon(":/images/delete.png"));
     deleteAction->setShortcut(QKeySequence::Delete);
     deleteAction->setStatusTip(tr("Delete cells"));
-	connect(deleteAction,SIGNAL(triggered()),spreadsheet,SLOT(slot_delete()));
+	connect(deleteAction,SIGNAL(triggered()),spreadsheet,SLOT(del()));
 
 	selectRowAction=new QAction(tr("&Row"),this);
 	selectRowAction->setStatusTip(tr("Select row cells"));

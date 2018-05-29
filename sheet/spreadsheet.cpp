@@ -7,8 +7,8 @@
 #include <QChar>
 #include <QTableWidget>
 #include <QCursor>
-
-
+#include <QTableWidgetSelectionRange>
+#include <QClipboard>
 
 spreadSheet::spreadSheet(QWidget *parent):QTableWidget(parent)
 {
@@ -62,6 +62,15 @@ QString spreadSheet::formula(int row, int column)
 	else {
 		return "";
 	}
+}
+
+QTableWidgetSelectionRange spreadSheet::selectedRange()
+{
+	QList<QTableWidgetSelectionRange> range = selectedRanges();
+	if (range.isEmpty()) {
+		return QTableWidgetSelectionRange();
+	}
+	return range.first();
 }
 
 spreadSheet::~spreadSheet()
@@ -151,24 +160,109 @@ void spreadSheet::slot_setShowGrid(bool flag)
 	//to do
 }
 
-void spreadSheet::slot_cut()
+void spreadSheet::cut()
 {
-
+	copy();
+	del();
 }
 
-void spreadSheet::slot_copy()
-{
-
+void spreadSheet::copy(){
+	QTableWidgetSelectionRange range = selectedRange();
+	QString str;
+	for (int i = 0; i < range.rowCount(); i++) {
+		if (i > 0) {
+			str += "\n";
+		}
+		for (int j = 0; j < range.columnCount(); j++) {
+			if (j > 0) {
+				str += "\t";
+			}
+			str += formula(range.topRow() + j, range.leftColumn() + i);
+		}
+	}
+	QApplication::clipboard()->setText(str);
 }
 
-void spreadSheet::slot_paste()
+void spreadSheet::paste()
 {
+	QTableWidgetSelectionRange range = selectedRange();
+	if (range.columnCount() == 0)
+		return;
+	QString str = QApplication::clipboard()->text();
 
+	QStringList strlist = str.split('\n');
+	QStringList list = strlist.first().split('\t');
+
+	int strColumnCount = list.count();
+	int strRowCount = strlist.count();
+	int columnFactor = range.rowCount() / strRowCount;
+	int rowFactor = range.columnCount() / strColumnCount;
+
+	if (range.columnCount() == 1) {
+		//情形1：只有一列，行必须为整数倍，不然只粘贴一次
+		if (range.columnCount() % strRowCount != 0||rowFactor==1) {
+			//range.columnCount()%strRowCount!=0,粘贴一次
+			pasteOnce(range.topRow(), range.leftColumn(), str);
+		}
+		else {
+			//range.columnCount()%strRowCount==0，粘贴rowFactor次
+			int TopRow = range.topRow();
+			int LeftColumn = range.leftColumn();
+			while (rowFactor) {
+				pasteOnce(TopRow, LeftColumn, str);
+				TopRow += strRowCount;
+				rowFactor--;
+			}
+		}
+	}
+	else if (range.columnCount()%strColumnCount==0) {
+		//情形2：列为整数倍，行必须为整数倍，不然只粘贴一次
+	}
+	else {
+		//情形3：列不是整数倍，也不等于1，不管行是否是整数倍都只粘贴一次
+	}
 }
 
-void spreadSheet::slot_delete()
-{
+void spreadSheet::pasteOnce(int TopRow, int LeftColumn,QString str){
+	QString::iterator it = str.begin();
+	int tabNum = 0;
+	int retNum = 0;
+	while (it != str.end()) {
+		QString word;
+		if (*it != '\t' || *it != '\n') {
+			word += *it;
+			it++;
+		}
+		else {
+			if (*it == '\t') {
+				str = str.mid(word.length() + 1);
+				it = str.begin();
+				setFormula(TopRow + retNum, LeftColumn + tabNum, word);
+				tabNum += 1;
 
+			}
+			else {
+				str = str.mid(word.length() + 1);
+				it = str.begin();
+				setFormula(TopRow + retNum, LeftColumn + tabNum, word);
+				retNum += 1;
+				tabNum = 0;
+			}
+		}
+	}
+}
+
+void spreadSheet::del()
+{
+	QList<QTableWidgetItem*> selected = selectedItems();
+	if (!selected.isEmpty()) {
+		foreach(auto item, selected) {
+			if (!item) {
+				delete item;
+				somethingChanged();
+			}
+		}
+	}
 }
 
 void spreadSheet::slot_selectRow()
