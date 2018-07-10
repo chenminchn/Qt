@@ -1,0 +1,242 @@
+MyPushButton{
+	background-color: #333333;
+	border-radius: 40px;	
+}
+MyPushButton::hover{
+	border: none;
+	background-color: #808080;
+}
+MyPushButton::pressed{
+	border: none;
+	background-color: #A0A0A0;
+}
+MyPushButton#leftbracket{
+	border-image: url(:/images/leftbracket.png);	
+}
+MyPushButton#rightbracket{
+	border-image: url(:/images/rightBracket.png);
+}
+MyPushButton#memclear{
+	border-image: url(:/images/memclear.png);
+}
+MyPushButton#mempuls{
+	border-image: url(:/images/memplus.png);
+}
+MyPushButton#memminus{
+	border-image: url(:/images/memminus.png);
+}
+MyPushButton#memrecall{
+	border-image: url(:/images/memrecall.png);
+}
+MyPushButton#second{
+	border-image: url(:/images/second.png);
+}
+MyPushButton#square{
+	border-image: url(:/images/square.png);
+}
+MyPushButton#cube{
+	border-image: url(:/images/cube.png);
+}
+MyPushButton#power{
+	border-image: url(:/images/power.png);
+}
+MyPushButton#ex{
+	border-image: url(:/images/ex.png);
+}
+MyPushButton#tenx{
+	border-image: url(:/images/tenx.png);
+}
+MyPushButton#onex{
+	border-image: url(:/images/onex.png);
+}
+MyPushButton#squareroot{
+	border-image: url(:/images/squareroot.png);
+}
+MyPushButton#threeroot{
+	border-image: url(:/images/threeroot.png);
+}
+MyPushButton#yroot{
+	border-image: url(:/images/yroot.png);
+}
+MyPushButton#ln{
+	border-image: url(:/images/ln.png);
+}
+MyPushButton#logten{
+	border-image: url(:/images/logten.png);
+}
+MyPushButton#xfactorial{
+	border-image: url(:/images/xfactorial.png);
+}
+MyPushButton#sin{
+	border-image: url(:/images/sin.png);
+}
+MyPushButton#cos{
+	border-image: url(:/images/cos.png);
+}
+MyPushButton#tan{
+	border-image: url(:/images/tan.png);
+}
+MyPushButton#e{
+	border-image: url(:/images/e.png);
+}
+MyPushButton#EE{
+	border-image: url(:/images/EE.png);
+}
+MyPushButton#rad{
+	border-image: url(:/images/rad.png);
+}
+MyPushButton#sinh{
+	border-image: url(:/images/sinh.png);
+}
+MyPushButton#cosh{
+	border-image: url(:/images/cosh.png);
+}
+MyPushButton#tanh{
+	border-image: url(:/images/tanh.png);
+}
+MyPushButton#pi{
+	border-image: url(:/images/pi.png);
+}
+MyPushButton#rand{
+	border-image: url(:/images/rand.png);
+}
+
+MyPushButton#ac{
+	background-color: rgb(166,166,166);
+	border-image: url(:/images/ac.png);
+}
+MyPushButton#ac::hover{
+	background-color: rgb(200,200,200);
+	border-image: url(:/images/ac.png);
+}
+MyPushButton#ac::pressed{
+	background-color: rgb(255,255,255);
+	border-image: url(:/images/ac.png);
+}
+
+MyPushButton#plusminus{
+	background-color: rgb(166,166,166);
+	border-image: url(:/images/plusminus.png);
+}
+MyPushButton#plusminus::hover{
+	background-color: rgb(200,200,200);
+	border-image: url(:/images/plusminus.png);
+}
+MyPushButton#plusminus::pressed{
+	background-color: rgb(255,255,255);
+	border-image: url(:/images/plusminus.png);
+}
+
+MyPushButton#percent{
+	background-color: rgb(166,166,166);
+	border-image: url(:/images/percent.png);
+}
+MyPushButton#percent::hover{
+	background-color: rgb(200,200,200);
+	border-image: url(:/images/percent.png);
+}
+MyPushButton#percent::pressed{
+	background-color: rgb(255,255,255);
+	border-image: url(:/images/percent.png);
+}
+
+MyPushButton#divide{
+	background-color: rgb(255,149,0);
+	border-image: url(:/images/divide.png);
+}
+MyPushButton#divide::hover{
+	background-color: rgb(255,200,100);
+	border-image: url(:/images/divide.png);
+}
+MyPushButton#divide::pressed{
+	background-color: rgb(255,255,255);
+	border-image: url(:/images/divide.png);
+}
+
+MyPushButton#times{
+	background-color: rgb(255,149,0);
+	border-image: url(:/images/times.png);
+}
+MyPushButton#times::hover{
+	background-color: rgb(255,200,100);
+	border-image: url(:/images/times.png);
+}
+MyPushButton#times::pressed{
+	background-color: rgb(255,255,255);
+	border-image: url(:/images/times.png);
+}
+
+MyPushButton#minus{
+	background-color: rgb(255,149,0);
+	border-image: url(:/images/minus.png);
+}
+MyPushButton#minus::hover{
+	background-color: rgb(255,200,100);
+	border-image: url(:/images/minus.png);
+}
+MyPushButton#minus::pressed{
+	background-color: rgb(255,255,255);
+	border-image: url(:/images/minus.png);
+}
+
+MyPushButton#plus{
+	background-color: rgb(255,149,0);
+	border-image: url(:/images/plus.png);
+}
+MyPushButton#plus::hover{
+	background-color: rgb(255,200,100);
+	border-image: url(:/images/plus.png);
+}
+MyPushButton#plus::pressed{
+	background-color: rgb(255,255,255);
+	border-image: url(:/images/plus.png);
+}
+
+MyPushButton#equal{
+	background-color: rgb(255,149,0);
+	border-image: url(:/images/equal.png);
+}
+MyPushButton#equal::hover{
+	background-color: rgb(255,200,100);
+	border-image: url(:/images/equal.png);
+}
+MyPushButton#equal::pressed{
+	background-color: rgb(255,255,255);
+	border-image: url(:/images/equal.png);
+}
+
+MyPushButton#point{
+	border-image: url(:/images/point.png);
+}
+MyPushButton#num0{
+	border-image: url(:/images/num0.png);
+}
+MyPushButton#num1{
+	border-image: url(:/images/num1.png);
+}
+MyPushButton#num2{
+	border-image: url(:/images/num2.png);
+}
+MyPushButton#num3{
+	border-image: url(:/images/num3.png);
+}
+MyPushButton#num4{
+	border-image: url(:/images/num4.png);
+}
+MyPushButton#num5{
+	border-image: url(:/images/num5.png);
+}
+MyPushButton#num6{
+	border-image: url(:/images/num6.png);
+}
+MyPushButton#num7{
+	border-image: url(:/images/num7.png);
+}
+MyPushButton#num8{
+	border-image: url(:/images/num8.png);
+}
+MyPushButton#num9{
+	border-image: url(:/images/num9.png);
+}
+
+
