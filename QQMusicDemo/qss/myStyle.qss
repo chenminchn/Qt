@@ -1,0 +1,31 @@
+MyPushButton{
+	background: transparent;
+}
+
+MyPushButton#return{border-image:url(:/images/topwidget/btn_return(1).png);}
+/*MyPushButton#return::hover{
+	border-image:url(:/images/topwidget/btn_return(2).png);
+}
+MyPushButton#return::pressed{
+	border-image:url(:/images/topwidget/btn_return(2).png);
+}
+
+QPushButton#next{
+	border-image:url(:/images/topwidget/test.png);
+}
+QPushButton#next::hover{
+	border-image:url(:/images/topwidget/btn_return(2).png);
+}
+QPushButton#next::pressed{
+	border-image:url(:/images/topwidget/btn_return(2).png);
+}
+
+QPushButton#refresh{
+	border-image:url(:/images/topwidget/test.png);
+}
+QPushButton#refresh::hover{
+	border-image:url(:/images/topwidget/btn_return(2).png);
+}
+QPushButton#refresh::pressed{
+	border-image:url(:/images/topwidget/btn_return(2).png);
+}*/
